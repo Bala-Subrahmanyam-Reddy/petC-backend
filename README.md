@@ -39,7 +39,7 @@ Set up a virtual environment
 ```bash
 python -m venv env
 source env/bin/activate  # for macOS/Linux
-.\env\Scripts\activate  # for Windows
+source env/Scripts/activate  # for Windows
 ```
 Change the database  url in following location 
 ```bash
