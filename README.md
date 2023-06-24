@@ -7,7 +7,6 @@ Its the backend for the petC which it provides different end points for client
 
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
-- [Configuration](#configuration)
 - [Usage](#usage)
 - [API Documentation](#api-documentation)
 
