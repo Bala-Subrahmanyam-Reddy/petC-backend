@@ -5,3 +5,4 @@ SQLAlchemy
 starlette
 uvicorn
 aiomysql
+aiosqlite
