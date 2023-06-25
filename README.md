@@ -3,12 +3,19 @@
 
 Its the backend for the petC which it provides different end points for client
 
+Backend Docs
+https://petcbackend-1-h3890731.deta.app/docs
+
+Token to authenticate :token2
 ## Table of Contents
 
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Usage](#usage)
-- [API Documentation](#api-documentation)
+- [Petc Backend](#petc-backend)
+  - [Table of Contents](#table-of-contents)
+  - [Prerequisites](#prerequisites)
+  - [Authors](#authors)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Documentation](#documentation)
 
 ## Prerequisites
 
@@ -64,5 +71,5 @@ Open a web browser and navigate to http://localhost:8000 to access the API.
 
 ## Documentation
 
-[Access the documentation here ](http://localhost:8000/docs)
+[Access the documentation here ](https://petcbackend-1-h3890731.deta.app/docs)
 
