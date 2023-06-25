@@ -6,23 +6,24 @@ from routes.index import userRouter, categoryRouter, subCategoryRouter, productR
 from config.db import database, metadata, engine
 
 
-metadata.create_all(bind=engine)
 app = FastAPI()
 
 
 # Set up CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow requests from all origins
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],  # Allow all methods
-    allow_headers=["*"],  # Allow all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
+metadata.create_all(bind=engine)
 
-@app.get("/")
-def root(token: str = Depends(verify_token)):
-    return {"message": "Bearer token verified!"}
+
+# @app.get("/")
+# def root(token: str = Depends(verify_token)):
+#     return {"message": "Bearer token verified!"}
 
 
 app.include_router(userRouter, dependencies=[Depends(verify_token)])
