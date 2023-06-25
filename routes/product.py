@@ -8,12 +8,14 @@ productRouter = APIRouter()
 
 async def getProductsBySubCategoryIdFunction(subCategoryId: str):
     query = text(f"""
-        SELECT products.*, GROUP_CONCAT(petbreads.name) AS pet_breadNames,
-        subcategories.name AS subCategoryName,categories.name as categoryName FROM products 
-        JOIN petbreads ON FIND_IN_SET(petbreads.id, products.pet_breads) > 0 
-        JOIN subcategories ON subcategories.id=products.sub_cat_id 
-        JOIN categories ON categories.id=products.cat_id WHERE products.sub_cat_id='{subCategoryId}'
-        GROUP BY products.id, products.pet_breads;
+        SELECT products.*, GROUP_CONCAT(petbreads.name, ',') AS pet_breadNames,
+        subcategories.name AS subCategoryName, categories.name AS categoryName
+        FROM products
+        JOIN petbreads ON instr(products.pet_breads, cast(petbreads.id as text)) > 0
+        JOIN subcategories ON subcategories.id = products.sub_cat_id
+        JOIN categories ON categories.id = products.cat_id
+        WHERE products.sub_cat_id = '{subCategoryId}'
+        GROUP BY products.id, products.pet_breads
         """)
     data = await database.fetch_all(query)
     return data
@@ -21,12 +23,14 @@ async def getProductsBySubCategoryIdFunction(subCategoryId: str):
 
 async def getProductsByCategoryIdFunction(categoryId: str):
     query = text(f"""
-        SELECT products.*, GROUP_CONCAT(petbreads.name) AS pet_breadNames,
-        subcategories.name AS subCategoryName,categories.name as categoryName FROM products 
-        JOIN petbreads ON FIND_IN_SET(petbreads.id, products.pet_breads) > 0 
-        JOIN subcategories ON subcategories.id=products.sub_cat_id 
-        JOIN categories ON categories.id=products.cat_id WHERE products.cat_id='{categoryId}'
-        GROUP BY products.id, products.pet_breads;
+        SELECT products.*, GROUP_CONCAT(petbreads.name, ',') AS pet_breadNames,
+        subcategories.name AS subCategoryName, categories.name AS categoryName
+        FROM products
+        JOIN petbreads ON instr(products.pet_breads, petbreads.id) > 0
+        JOIN subcategories ON subcategories.id = products.sub_cat_id
+        JOIN categories ON categories.id = products.cat_id
+        WHERE products.cat_id = '{categoryId}'
+        GROUP BY products.id, products.pet_breads
         """)
     data = await database.fetch_all(query)
     return data
@@ -35,12 +39,13 @@ async def getProductsByCategoryIdFunction(categoryId: str):
 @productRouter.get("/getAllProducts")
 async def getAllProducts():
     query = text("""
-    SELECT products.*, GROUP_CONCAT(petbreads.name) AS pet_breadNames,
-    subcategories.name AS subCategoryName,categories.name as categoryName FROM products 
-    JOIN petbreads ON FIND_IN_SET(petbreads.id, products.pet_breads) > 0 
-    JOIN subcategories ON subcategories.id=products.sub_cat_id 
-    JOIN categories ON categories.id=products.cat_id 
-    GROUP BY products.id, products.pet_breads;
+    SELECT products.*, GROUP_CONCAT(petbreads.name, ',') AS pet_breadNames,
+    subcategories.name AS subCategoryName, categories.name AS categoryName
+    FROM products
+    JOIN petbreads ON instr(products.pet_breads, cast(petbreads.id as text)) > 0
+    JOIN subcategories ON subcategories.id = products.sub_cat_id
+    JOIN categories ON categories.id = products.cat_id
+    GROUP BY products.id, products.pet_breads
     """)
     data = await database.fetch_all(query)
     return {"status": 200, "data": data}
@@ -78,12 +83,14 @@ async def getProductsByCategories():
 @productRouter.get("/getProductById")
 async def getProductById(productId: str):
     query = text(f"""
-    SELECT products.*, GROUP_CONCAT(petbreads.name) AS pet_breadNames,
-    subcategories.name AS subCategoryName,categories.name as categoryName FROM products 
-    JOIN petbreads ON FIND_IN_SET(petbreads.id, products.pet_breads) > 0 
-    JOIN subcategories ON subcategories.id=products.sub_cat_id 
-    JOIN categories ON categories.id=products.cat_id WHERE products.id='{productId}'
-    GROUP BY products.id, products.pet_breads;
-    """)
+    SELECT products.*, GROUP_CONCAT(petbreads.name, ',') AS pet_breadNames,
+    subcategories.name AS subCategoryName, categories.name AS categoryName
+    FROM products
+    JOIN petbreads ON instr(',' || products.pet_breads || ',', ',' || cast(petbreads.id as text) || ',') > 0
+    JOIN subcategories ON subcategories.id = products.sub_cat_id
+    JOIN categories ON categories.id = products.cat_id
+    WHERE products.id = '{productId}'
+    GROUP BY products.id, products.pet_breads
+     """)
     data = await database.fetch_all(query)
     return {"status": 200, "data": data}
